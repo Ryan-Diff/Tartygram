@@ -24,4 +24,20 @@ describe('Tartygram routes', () => {
       profilePhotoUrl: 'jpg.jpg'
     });
   });
+
+  it('logs in a user via POST', async() => {
+    const user = await UserService.create({
+      email: 'email@email.com',
+      password: '1234',
+      profilePhotoUrl: 'jpg.jpg'
+    });
+
+    const response = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: 'email@email.com',
+        password: '1234',
+        profilePhotoUrl: 'jpg.jpg'
+      });
+  });
 });
