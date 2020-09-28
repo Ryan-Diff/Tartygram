@@ -39,5 +39,39 @@ describe('Tartygram routes', () => {
         password: '1234',
         profilePhotoUrl: 'jpg.jpg'
       });
+
+    expect(response.body).toEqual({
+      id: expect.any(String),
+      email: 'email@email.com',
+      profilePhotoUrl: 'jpg.jpg'
+    });
+  });
+
+  it('verifies a user via GET', async() => {
+    const agent = request.agent(app);
+    await agent
+      .post('/api/v1/auth/signup')
+      .send({
+        email: 'email@email.com',
+        password: '1234',
+        profilePhotoUrl: 'jpg.jpg'
+      });
+
+    const response = await agent
+      .get('/api/v1/auth/verify');
+
+    expect(response.body).toEqual({
+      id: expect.any(String),
+      email: 'email@email.com',
+      profilePhotoUrl: 'jpg.jpg'
+    });
+
+    const responseWithoutAUser = await request(app)
+      .get('/api/v1/auth/verify');
+
+    expect(responseWithoutAUser.body).toEqual({
+      status: 500,
+      message: 'jwt must be provided'
+    });
   });
 });
